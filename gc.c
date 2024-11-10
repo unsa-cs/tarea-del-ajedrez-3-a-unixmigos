@@ -43,6 +43,7 @@ void memoryAlloc(void** pointer, size_t size){
     fprintf(stderr, "Error al asignar memoria\n");
     return;
   }
+  fprintf(stderr, "Direccion de memoria del puntero: %p\n", &(*pointer));
   MemoryEntry* entry = createMemoryEntry(*pointer);
   entry->pointers = createPointerNode(pointer);
   entry->next = memoryList;
@@ -115,7 +116,7 @@ int countMemoryEntries(){
     if(current->pointers){
       fprintf(stderr, "Memory: %p\n", current->memory);
       fprintf(stderr,  "Contenido memory: %c\n", *(char*)(current->memory));
-      fprintf(stderr, "Puntero a memory: %p\n", current->memory);
+      fprintf(stderr, "Puntero a memory: %p\n", current->pointers->pointer);
       count++;
     }
     current = current->next;
