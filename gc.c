@@ -67,6 +67,7 @@ void addPointer(void** new_pointer, void* existing_memory){
 
 // Función para desvincular un puntero de la entrada de memoria correspondiente
 void unregisterPointer(void** pointer){
+  fprintf(stderr, "puntero a desvincular %p\n", pointer);
   MemoryEntry* current = memoryList;
   while(current){
     PointerNode* prev = NULL;
