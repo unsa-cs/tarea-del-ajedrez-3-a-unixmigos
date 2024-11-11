@@ -24,8 +24,18 @@ void showDictionary(){
   MemoryEntry* current = memoryList;
   fprintf(stderr, "--------------DICTIONARY--------------\n");
   while(current){
-    fprintf(stderr, "MEMORY %p\n", current->memory);
+    fprintf(stderr, "[CLAVE]: MEMORY %p\n", current->memory);
+    PointerNode* ptr = current->pointers;
+    fprintf(stderr, "[VALOR(ES)]:\n");
+    int contador = 0;
+    while(ptr){
+      fprintf(stderr, "Direccion de memoria de un puntero: %p\n", ptr->pointer);
+      contador++;
+      ptr = ptr->next;
+    }
+    fprintf(stderr, "Numero de punteros activos: %d\n", contador);
     current = current->next;
+    fprintf(stderr, "######################################\n");
   }
   fprintf(stderr, "-------------END DICTIONARY----------\n");
 }
