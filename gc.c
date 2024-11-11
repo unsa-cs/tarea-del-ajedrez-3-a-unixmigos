@@ -19,6 +19,17 @@ typedef struct MemoryEntry{
 
 MemoryEntry* memoryList = NULL; // Lista enlazada para las entradas de memoria
 
+// Funcion para mostrar el diccionario
+void showDictionary(){
+  MemoryEntry* current = memoryList;
+  fprintf(stderr, "--------------DICTIONARY--------------\n");
+  while(current){
+    fprintf(stderr, "MEMORY %p\n", current->memory);
+    current = current->next;
+  }
+  fprintf(stderr, "-------------END DICTIONARY----------\n");
+}
+
 // Función de ayuda para crear un nuevo nodo de puntero
 PointerNode* createPointerNode(void** pointer){
   PointerNode* node = (PointerNode*)malloc(sizeof(PointerNode));
@@ -48,6 +59,7 @@ void memoryAlloc(void** pointer, size_t size){
   entry->pointers = createPointerNode(pointer);
   entry->next = memoryList;
   memoryList = entry;
+  showDictionary();
 }
 
 // Función para agregar un puntero adicional que apunte a la misma memoria
@@ -79,6 +91,8 @@ void unregisterPointer(void** pointer){
         else
           current->pointers = ptr->next;
         free(ptr);
+        fprintf(stderr, "------------DESVINCULADO---------\n");
+        showDictionary();
         return;
       }
       prev = ptr;
@@ -86,6 +100,8 @@ void unregisterPointer(void** pointer){
     }
     current = current->next;
   }
+  fprintf(stderr, "---------------NO DESVINCULADO---------\n");
+  showDictionary();
 }
 
 // Función de recolección de basura que libera memoria sin referencias activas
@@ -115,9 +131,6 @@ int countMemoryEntries(){
   MemoryEntry* current = memoryList;
   while(current){
     if(current->pointers){
-      fprintf(stderr, "Memory: %p\n", current->memory);
-      fprintf(stderr,  "Contenido memory: %c\n", *(char*)(current->memory));
-      fprintf(stderr, "Puntero a memory: %p\n", current->pointers->pointer);
       count++;
     }
     current = current->next;
