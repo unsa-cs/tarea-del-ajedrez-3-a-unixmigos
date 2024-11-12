@@ -64,12 +64,12 @@ void memoryAlloc(void** pointer, size_t size){
     fprintf(stderr, "Error al asignar memoria\n");
     return;
   }
-  fprintf(stderr, "Direccion de memoria del puntero: %p\n", &(*pointer));
+  //fprintf(stderr, "Direccion de memoria del puntero: %p\n", &(*pointer));
   MemoryEntry* entry = createMemoryEntry(*pointer);
   entry->pointers = createPointerNode(pointer);
   entry->next = memoryList;
   memoryList = entry;
-  showDictionary();
+  //showDictionary();
 }
 
 // Función para agregar un puntero adicional que apunte a la misma memoria
@@ -89,7 +89,7 @@ void addPointer(void** new_pointer, void* existing_memory){
 
 // Función para desvincular un puntero de la entrada de memoria correspondiente
 void unregisterPointer(void** pointer){
-  fprintf(stderr, "puntero a desvincular %p\n", pointer);
+  //fprintf(stderr, "puntero a desvincular %p\n", pointer);
   MemoryEntry* current = memoryList;
   while(current){
     PointerNode* prev = NULL;
@@ -101,8 +101,8 @@ void unregisterPointer(void** pointer){
         else
           current->pointers = ptr->next;
         free(ptr);
-        fprintf(stderr, "------------DESVINCULADO---------\n");
-        showDictionary();
+        //fprintf(stderr, "------------DESVINCULADO---------\n");
+        //showDictionary();
         return;
       }
       prev = ptr;
@@ -110,8 +110,8 @@ void unregisterPointer(void** pointer){
     }
     current = current->next;
   }
-  fprintf(stderr, "---------------NO DESVINCULADO---------\n");
-  showDictionary();
+  //fprintf(stderr, "---------------NO DESVINCULADO---------\n");
+  //showDictionary();
 }
 
 // Función de recolección de basura que libera memoria sin referencias activas

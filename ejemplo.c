@@ -3,8 +3,7 @@
 #include "gc.h"
 
 void display() {
-  char *test[] = {"____", "____", "____", "____", 0};
-  char **blackSquare = reverse(test);
+  char **blackSquare = join(reverse(whiteSquare), whiteSquare);
   interpreter(blackSquare);
   garbageCollector();
 }
