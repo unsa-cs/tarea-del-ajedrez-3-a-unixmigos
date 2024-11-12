@@ -3,8 +3,11 @@
 #include "chess.h"
 #include "gc.h"
 
+char*** head;
+
 char** allocateMemory(int rows, size_t cols){
   char** newFig;
+  head = &newFig;
   fprintf(stderr, "Direccion de memoria de newFig(allocateMemory): %p\n", &newFig);
   memoryAlloc((void**)&newFig, sizeof(char*)*(rows + 1));
   for(int i = 0; i < rows; i++)
@@ -18,7 +21,8 @@ void unlinkMemory(char** fig){
     unregisterPointer((void**)&fig[i]);
   countMemoryEntries();
   fprintf(stderr, "Direccion de memoria de fig(unlinkMemory): %p\n", &fig);
-  unregisterPointer((void**)&fig);
+  //unregisterPointer((void**)&fig);
+  unregisterPointer((void**)head);
   countMemoryEntries();
 }
 
