@@ -27,13 +27,13 @@ void allocateMemory(char*** newFig, int rows, size_t cols){
   //fprintf(stderr, "Direccion de memoria de newFig(allocateMemory): %p\n", &newFig);
   memoryAlloc((void**)newFig, sizeof(char*)*(rows + 1));
   for(int i = 0; i < rows; i++)
-    memoryAlloc((void**)&(newFig[i]), sizeof(char)*(cols + 1));
+    memoryAlloc((void**)&((*newFig)[i]), sizeof(char)*(cols + 1));
 }
 
 void unlinkMemory(char*** fig){
   countMemoryEntries();
-  for(int i = 0; fig[i]; i++)
-    unregisterPointer((void**)&fig[i]);
+  for(int i = 0; (*fig)[i]; i++)
+    unregisterPointer((void**)&((*fig)[i]));
   countMemoryEntries();
   //fprintf(stderr, "Direccion de memoria de fig(unlinkMemory): %p\n", &fig);
   //unregisterPointer((void**)&fig);
