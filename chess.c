@@ -3,7 +3,6 @@
 #include "chess.h"
 #include "gc.h"
 
-char*** head;
 
 int countRow(char** piece){
   int count = 0;
@@ -24,24 +23,21 @@ int countCol(char* piece){
   return count;
 }
 
-char** allocateMemory(int rows, size_t cols){
-  char** newFig;
-  head = &newFig;
+void allocateMemory(char*** newFig, int rows, size_t cols){
   //fprintf(stderr, "Direccion de memoria de newFig(allocateMemory): %p\n", &newFig);
-  memoryAlloc((void**)&newFig, sizeof(char*)*(rows + 1));
+  memoryAlloc((void**)newFig, sizeof(char*)*(rows + 1));
   for(int i = 0; i < rows; i++)
-    memoryAlloc((void**)&newFig[i], sizeof(char)*(cols + 1));
-  return newFig;
+    memoryAlloc((void**)&(newFig[i]), sizeof(char)*(cols + 1));
 }
 
-void unlinkMemory(char** fig){
+void unlinkMemory(char*** fig){
   countMemoryEntries();
   for(int i = 0; fig[i]; i++)
     unregisterPointer((void**)&fig[i]);
   countMemoryEntries();
   //fprintf(stderr, "Direccion de memoria de fig(unlinkMemory): %p\n", &fig);
   //unregisterPointer((void**)&fig);
-  unregisterPointer((void**)head);
+  unregisterPointer((void**)fig);
   countMemoryEntries();
 }
 
@@ -50,7 +46,8 @@ char** reverse(char** fig){
   while(fig[++rows]);
   int cols = 0;
   while(fig[0][++cols]);
-  char** newFig = allocateMemory(rows, cols);
+  char** newFig = NULL; 
+  allocateMemory(&newFig, rows, cols);
   for(int i = 0; fig[i]; i++){
     for(int j = 0; fig[0][j]; j++){
       if (fig[i][j] == '.')
@@ -67,7 +64,7 @@ char** reverse(char** fig){
     newFig[i][cols] = 0;
   }
   newFig[rows] = 0;
-  unlinkMemory(newFig);
+  unlinkMemory(&newFig);
   return newFig;
 }
 
@@ -77,7 +74,8 @@ char** join(char** piece1, char** piece2){
   int col2 = countCol(*piece2);
   int colTotal = col1 + col2;
 
-  char** newPiece = allocateMemory(row, colTotal);
+  char** newPiece = NULL;
+  allocateMemory(&newPiece, row, colTotal);
 
   for(int i = 0; i < row; i++){
     for(int j = 0; j < col1; j++){
@@ -89,6 +87,6 @@ char** join(char** piece1, char** piece2){
     newPiece[i][colTotal] = 0;
   }
   newPiece[row] = 0;
-  unlinkMemory(newPiece);
+  unlinkMemory(&newPiece);
   return newPiece;
 }
