@@ -49,29 +49,13 @@ void addPointer(void** new_pointer, void* existing_memory){
 
 // Función para desvincular un puntero de la entrada de memoria correspondiente
 void unregisterPointer(void** pointer){
-  //fprintf(stderr, "puntero a desvincular %p\n", pointer);
   MemoryEntry* current = memoryList;
   while(current){
-    PointerNode* prev = NULL;
-    PointerNode* ptr = current->pointers;
-    while(ptr){
-      if(ptr->pointer == pointer){
-        if(prev)
-          prev->next = ptr->next;
-        else
-          current->pointers = ptr->next;
-        free(ptr);
-        //fprintf(stderr, "------------DESVINCULADO---------\n");
-        //showDictionary();
-        return;
-      }
-      prev = ptr;
-      ptr = ptr->next;
+    if(current->memory == *pointer && current->countRef){
+      current->countRef--;
     }
     current = current->next;
   }
-  //fprintf(stderr, "---------------NO DESVINCULADO---------\n");
-  //showDictionary();
 }
 
 // Función de recolección de basura que libera memoria sin referencias activas
@@ -79,7 +63,7 @@ void garbageCollector(){
   MemoryEntry* prevEntry = NULL;
   MemoryEntry* currentEntry = memoryList;
   while(currentEntry){
-    if(currentEntry->pointers){
+    if(currentEntry->countRef > 0){
       prevEntry = currentEntry;
       currentEntry = currentEntry->next;
     }else{
@@ -100,7 +84,7 @@ int countMemoryEntries(){
   int count = 0;
   MemoryEntry* current = memoryList;
   while(current){
-    if(current->pointers){
+    if(current->countRef > 0){
       count++;
     }
     current = current->next;
@@ -108,4 +92,3 @@ int countMemoryEntries(){
   fprintf(stderr, "[DEBUG] memory with references: %d\n", count);
   return count;
 }
-
